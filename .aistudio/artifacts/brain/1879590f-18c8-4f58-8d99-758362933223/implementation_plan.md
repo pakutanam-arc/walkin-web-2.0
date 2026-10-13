@@ -1,35 +1,41 @@
-# Rencana Implementasi: Logo Browser Tab (Favicon) Walk-in Frozen
+# Rencana Implementasi: Penyesuaian Posisi Tombol & Jendela Chat AI
 
-Pengguna ingin memasang logo pada tab browser (seperti logo Firebase pada tab "WALK-IN" di atasnya). Berdasarkan jawaban pengguna, logo yang diinginkan adalah **balok es dan kristal salju khas Walk-in Frozen**, diterapkan langsung di proyek ini sekaligus disediakan panduan untuk GitHub Pages.
-
----
-
-## 1. Pembuatan Aset Logo & Favicon Walk-in Frozen
-- Merancang favicon vektor SVG modern dengan tema:
-  - Balok es 3D kristal (`#38bdf8` ke `#0284c7`) dengan pencahayaan transparan dingin.
-  - Kristal salju 6 cabang simetris putih bercahaya di tengah balok es.
-  - Bingkai rounded yang kontras dan jelas terlihat baik pada tab browser berlatar belakang gelap (Dark Mode) maupun terang (Light Mode).
-- Menghasilkan format SVG inline/data URI serta file aset icon mandiri (`favicon.svg`, `favicon.ico` data URI, dan `apple-touch-icon`).
+Menurunkan posisi tombol bulat chat AI dan jendela popup chat ke sudut kanan bawah standar (20px dari tepi bawah layar) serta mencegah elemen terpotong pada berbagai ukuran layar.
 
 ---
 
-## 2. Pemasangan di File `index.html` Aplikasi
-- Memasukkan tag icon standar modern pada bagian `<head>` di `index.html`:
-  - `<link rel="icon" type="image/svg+xml" href="...">`
-  - `<link rel="apple-touch-icon" href="...">`
-  - Tag warna tema `<meta name="theme-color" content="#0f172a">` agar selaras dengan header Walk-in.
-- Mempercantik logo pada kartu Login dan Header Web agar serasi dengan icon di tab browser.
+### User Review Required
+
+> [!NOTE]
+> Berdasarkan preferensi Anda:
+> - Tombol bulat chat dan jendela chat diturunkan ke sudut kanan bawah.
+> - Jarak dari tepi bawah layar diatur menjadi **20px** (posisi standar floating action button).
+> - Jendela chat diberi batas tinggi dinamis (`max-height: calc(100vh - 110px)`) agar tidak meluap atau terpotong di bagian atas layar.
 
 ---
 
-## 3. Penyusunan Panduan untuk GitHub Pages (`pakutanam-arc.github.io/walkin-web-2.0/`)
-- Menyiapkan panduan salin-tempel yang praktis:
-  - Baris kode HTML yang tinggal disalin ke file `index.html` di repositori GitHub Pages.
-  - Cara mengatasi cache browser jika logo belum langsung muncul setelah push ke GitHub.
-  - Menyertakan tombol salin cepat kode favicon langsung dari menu Pengaturan di aplikasi.
+### Perubahan yang Diusulkan
+
+#### File: `index.html`
+
+- **Update CSS `.chat-widget`**:
+  - Ubah `bottom: 80px;` menjadi `bottom: 20px;`.
+  - Pertahankan `right: 20px;` dan `z-index: 1000;`.
+  - Hasil: Tombol bulat chat berada persis di sudut kanan bawah dengan jarak nyaman 20px dari tepi layar.
+
+- **Update CSS `.chat-window`**:
+  - Pertahankan `position: absolute; bottom: 70px; right: 0;` sehingga jendela muncul tepat di atas tombol bulat chat tanpa saling menimpa.
+  - Perbaiki `max-height: 80vh;` menjadi `max-height: calc(100vh - 110px);` untuk menjamin header atau footer jendela chat tidak pernah terpotong di layar laptop/desktop beresolusi rendah.
+  - Pastikan tampilan mobile (`max-width: 480px`) tetap full-screen bersih dan tertutup rapat saat digunakan di smartphone.
 
 ---
 
-## 4. Verifikasi & Pengujian
-- Memastikan tab browser langsung memuat logo balok es salju tanpa error.
-- Menjalankan `compile_applet` dan `lint_applet` untuk memastikan tidak ada konflik kode.
+### Verification Plan
+
+1. **Uji Tampilan Desktop/Laptop**:
+   - Buka halaman aplikasi.
+   - Verifikasi posisi tombol bulat chat AI berada di pojok kanan bawah berjarak 20px dari bawah layar.
+   - Klik tombol untuk membuka jendela chat, pastikan header ("R&D Assistant AI"), isi pesan, dan input bar ("Ketik pesan...") terlihat utuh tanpa ada yang terpotong.
+2. **Uji Responsivitas**:
+   - Verifikasi tidak ada tumpang tindih dengan elemen login atau navigasi dasar.
+   - Jalankan `compile_applet` untuk memastikan tidak ada kesalahan sintaksis atau regresi pada aplikasi.

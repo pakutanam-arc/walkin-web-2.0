@@ -491,10 +491,10 @@
         @media print { .tab-bar, .header .user-row, .btn { display: none !important; } .card { box-shadow: none !important; border: 1px solid #ccc !important; } }
 
         /* Chatbot UI */
-        .chat-widget { position: fixed; bottom: 80px; right: 20px; z-index: 1000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .chat-btn { width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: white; border: none; cursor: pointer; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; font-size: 24px; transition: var(--transition-smooth); }
         .chat-btn:hover { transform: scale(1.05); background: var(--primary-hover); }
-        .chat-window { position: absolute; bottom: 70px; right: 0; width: 350px; height: 500px; max-height: 80vh; background: var(--bg-secondary); border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(10px); transition: var(--transition-smooth); }
+        .chat-window { position: absolute; bottom: 70px; right: 0; width: 350px; height: 500px; max-height: calc(100vh - 110px); background: var(--bg-secondary); border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(10px); transition: var(--transition-smooth); }
         .chat-window.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
         @media (max-width: 480px) { .chat-window { position: fixed; bottom: 0; right: 0; width: 100%; height: 100vh; max-height: 100vh; border-radius: 0; z-index: 2000; } }
         .chat-header { background: linear-gradient(135deg, var(--primary), var(--purple)); color: white; padding: 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
@@ -541,20 +541,22 @@
                 </div>
             </div>
             <h2 style="font-size:1.4rem; font-weight:700; color:var(--text-primary); margin-bottom:4px;">Walk-in R&D</h2>
-            <p style="color:#64748b;margin-bottom:18px;font-size:0.875rem;">Sistem Inventaris Frozen & Chiller HokBen</p>
-            <div class="form-group"><input type="email" id="loginEmail" placeholder="Email" autocomplete="email"></div>
-            <div class="form-group"><input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password"></div>
-            <button class="btn btn-primary" style="width:100%" onclick="App.login()">Masuk</button>
-            <button class="google-btn" onclick="App.loginWithGoogle()"><i class="fab fa-google" style="color:#ea4335;"></i> Masuk dengan Google</button>
-            <p id="loginError" style="color:red;margin-top:10px;" role="alert"></p>
-            <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-secondary);display:flex;flex-direction:column;gap:6px;align-items:center;">
-                <button type="button" onclick="App.showUnauthorizedDomainModal()" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:4px 0;font-size:0.8rem;display:inline-flex;align-items:center;gap:5px;">
-                    <i class="fas fa-shield-alt"></i> Petunjuk Otorisasi Domain Firebase
+            <p style="color:#64748b;margin-bottom:20px;font-size:0.875rem;">Sistem Inventaris Frozen & Chiller HokBen</p>
+            <form id="loginForm" onsubmit="event.preventDefault(); App.login();" style="text-align:left;">
+                <div class="form-group" style="margin-bottom:14px;">
+                    <label for="loginEmail" style="font-size:0.8rem; margin-bottom:6px; font-weight:600; color:var(--text-primary); display:block;">Email</label>
+                    <input type="email" id="loginEmail" placeholder="nama@hokben.co.id" autocomplete="email" required style="width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border); font-size:0.95rem;">
+                </div>
+                <div class="form-group" style="margin-bottom:18px;">
+                    <label for="loginPassword" style="font-size:0.8rem; margin-bottom:6px; font-weight:600; color:var(--text-primary); display:block;">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" style="width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border); font-size:0.95rem;">
+                    <div style="font-size:0.75rem; color:#64748b; margin-top:6px; line-height:1.35;">* Gunakan email hokben untuk login.</div>
+                </div>
+                <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width:100%; padding:12px 16px; font-size:0.95rem; font-weight:600; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
                 </button>
-                <button type="button" onclick="App.showFaviconGuideModal()" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:4px 0;font-size:0.8rem;display:inline-flex;align-items:center;gap:5px;">
-                    <i class="fas fa-icons"></i> Panduan Logo Browser (GitHub Pages)
-                </button>
-            </div>
+            </form>
+            <p id="loginError" style="color:var(--danger, #ef4444);margin-top:12px;font-size:0.85rem;min-height:18px;" role="alert"></p>
         </div>
     </div>
     
@@ -730,8 +732,11 @@
             const email = DOM.loginEmail?.value.trim();
             const password = DOM.loginPassword?.value.trim();
             
+            if (DOM.loginError) DOM.loginError.textContent = '';
+            
             if (!email) {
                 showToast('Isi email.', 'critical');
+                if (DOM.loginEmail) DOM.loginEmail.focus();
                 return;
             }
             
@@ -743,14 +748,28 @@
 
             if (!password) {
                 showToast('Isi password.', 'critical');
+                if (DOM.loginPassword) DOM.loginPassword.focus();
                 return;
             }
             
-            DOM.loginError.textContent = '';
             auth.signInWithEmailAndPassword(email, password)
                 .catch(err => {
                     console.error('Login error:', err);
-                    DOM.loginError.textContent = 'Gagal: ' + (err.message || 'Unknown error');
+                    if (DOM.loginError) {
+                        let msg = 'Gagal login';
+                        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                            msg = 'Password salah. Silakan coba lagi.';
+                        } else if (err.code === 'auth/user-not-found') {
+                            msg = 'Email tidak terdaftar.';
+                        } else if (err.code === 'auth/invalid-email') {
+                            msg = 'Format email tidak valid.';
+                        } else if (err.code === 'auth/too-many-requests') {
+                            msg = 'Terlalu banyak percobaan. Silakan coba lagi nanti.';
+                        } else {
+                            msg = 'Gagal: ' + (err.message || 'Unknown error');
+                        }
+                        DOM.loginError.textContent = msg;
+                    }
                 });
         }
         
@@ -760,19 +779,30 @@
             console.log("Using Firebase Project:", CONFIG.firebase.projectId);
             auth.signInWithPopup(provider)
                 .catch(err => {
+                    if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+                        console.info('Google login popup was closed by user.');
+                        showToast('Login dibatalkan. Silakan coba lagi dan selesaikan login Google.', 'warning');
+                        return;
+                    }
                     console.error('Google login error:', err);
                     if (err.code === 'auth/unauthorized-domain') {
                         showToast('Domain aplikasi belum diizinkan di Firebase Console.', 'critical');
                         showUnauthorizedDomainModal();
-                    } else if (err.code === 'auth/popup-closed-by-user') {
-                        showToast('Login dibatalkan. Silakan coba lagi dan selesaikan login Google.', 'warning');
                     } else {
-                        showToast('Google login gagal: ' + err.message, 'critical');
+                        showToast('Google login gagal: ' + (err.message || err.code), 'critical');
                     }
                 });
         }
         
         function logout() {
+            if (state.unsubscribe) {
+                try { state.unsubscribe(); } catch (e) {}
+                state.unsubscribe = null;
+            }
+            if (state.txnUnsubscribe) {
+                try { state.txnUnsubscribe(); } catch (e) {}
+                state.txnUnsubscribe = null;
+            }
             auth.signOut().catch(console.error);
         }
 
@@ -1124,20 +1154,38 @@ git push origin main</pre>
                 if (user) {
                     DOM.loginScreen.style.display = 'none';
                     DOM.appScreen.style.display = 'block';
-                    DOM.currentUserName.textContent = user.email;
+                    DOM.currentUserName.textContent = user.email || 'Pengguna';
                     listenToFirestore();
                 } else {
                     DOM.loginScreen.style.display = 'block';
                     DOM.appScreen.style.display = 'none';
-                    if (state.unsubscribe) state.unsubscribe();
+                    if (state.unsubscribe) {
+                        try { state.unsubscribe(); } catch (e) {}
+                        state.unsubscribe = null;
+                    }
+                    if (state.txnUnsubscribe) {
+                        try { state.txnUnsubscribe(); } catch (e) {}
+                        state.txnUnsubscribe = null;
+                    }
                 }
             });
         }
         
         // ==================== FIRESTORE ====================
         function listenToFirestore() {
-            if (state.unsubscribe) state.unsubscribe();
-            if (state.txnUnsubscribe) state.txnUnsubscribe();
+            if (state.unsubscribe) {
+                try { state.unsubscribe(); } catch (e) {}
+                state.unsubscribe = null;
+            }
+            if (state.txnUnsubscribe) {
+                try { state.txnUnsubscribe(); } catch (e) {}
+                state.txnUnsubscribe = null;
+            }
+
+            if (!auth.currentUser) {
+                console.warn('listenToFirestore ditunda: Pengguna belum terautentikasi.');
+                return;
+            }
 
             // 1. Dengar Lemari Utama (Denah & Keranjang)
             state.unsubscribe = db.collection('shared').doc('data')
@@ -1151,9 +1199,13 @@ git push origin main</pre>
                         showToast('❌ Gagal sinkronisasi data', 'critical');
                     }
                 }, err => {
-                    console.error('Firestore listener error:', err);
-                    if (err.code === 'permission-denied') showToast('❌ Akses ditolak! Cek Firebase Security Rules.', 'critical');
-                    else showToast('❌ Koneksi database error: ' + err.message, 'critical');
+                    if (err.code === 'permission-denied') {
+                        console.warn('Firestore akses shared/data ditolak (izin atau sesi berakhir):', err.message);
+                        showToast('❌ Akses database ditolak. Pastikan aturan keamanan Firebase atau login ulang.', 'critical');
+                    } else {
+                        console.error('Firestore listener error:', err);
+                        showToast('❌ Koneksi database error: ' + err.message, 'critical');
+                    }
                 });
 
             // 2. Dengar Lemari Transaksi (Muat 300 aktivitas terbaru otomatis)
@@ -1168,6 +1220,12 @@ git push origin main</pre>
                     if (['history', 'rekap', 'search', 'in'].includes(state.currentTab)) {
                         updateNamaDatalist();
                         renderCurrentTab();
+                    }
+                }, err => {
+                    if (err.code === 'permission-denied') {
+                        console.warn('Firestore akses transactions ditolak (izin atau sesi berakhir):', err.message);
+                    } else {
+                        console.error('Firestore transactions listener error:', err);
                     }
                 });
         }
