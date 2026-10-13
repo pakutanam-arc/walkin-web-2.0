@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Walk-in Frozen & Chiller | v2.0</title>
     <meta name="description" content="Sistem manajemen inventaris gudang penyimpanan beku (Frozen) dan pendingin (Chiller) dengan pelacakan lokasi keranjang, FEFO, rekap pergerakan barang, dan asisten AI.">
+    <!-- Favicon & Browser Tab Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='64' height='64'%3E%3Cdefs%3E%3ClinearGradient id='iceGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='50%25' stop-color='%230284c7'/%3E%3Cstop offset='100%25' stop-color='%230369a1'/%3E%3C/linearGradient%3E%3Cfilter id='iceShadow' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='2' stdDeviation='2' flood-color='%23082f49' flood-opacity='0.35'/%3E%3C/filter%3E%3C/defs%3E%3Crect x='3' y='3' width='58' height='58' rx='14' fill='url(%23iceGrad)' stroke='%23bae6fd' stroke-width='2.5' filter='url(%23iceShadow)'/%3E%3Cpath d='M 6 18 C 6 10, 10 6, 18 6 L 46 6 C 54 6, 58 10, 58 18 C 54 13, 40 10, 32 10 C 20 10, 8 13, 6 18 Z' fill='%23ffffff' opacity='0.45'/%3E%3Ccircle cx='14' cy='14' r='2' fill='%23ffffff' opacity='0.6'/%3E%3Ccircle cx='20' cy='11' r='1.2' fill='%23ffffff' opacity='0.5'/%3E%3Cg stroke='%23ffffff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='32' y1='13' x2='32' y2='51'/%3E%3Cline x1='15.5' y1='22.5' x2='48.5' y2='41.5'/%3E%3Cline x1='15.5' y1='41.5' x2='48.5' y2='22.5'/%3E%3Cpath d='M 28 19 L 32 23 L 36 19'/%3E%3Cpath d='M 28 45 L 32 41 L 36 45'/%3E%3Cpath d='M 29.5 15.5 L 32 13.5 L 34.5 15.5'/%3E%3Cpath d='M 29.5 48.5 L 32 50.5 L 34.5 48.5'/%3E%3Cpath d='M 21 21 L 24 24.5 L 21 28'/%3E%3Cpath d='M 43 36 L 40 39.5 L 43 43'/%3E%3Cpath d='M 21 43 L 24 39.5 L 21 36'/%3E%3Cpath d='M 43 28 L 40 24.5 L 43 21'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='3.6' fill='%23ffffff'/%3E%3Ccircle cx='32' cy='32' r='1.8' fill='%230284c7'/%3E%3C/svg%3E">
+    <link rel="alternate icon" href="./favicon.svg">
+    <link rel="apple-touch-icon" href="./favicon.svg">
+    <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" crossorigin="anonymous"></script>
@@ -511,19 +516,65 @@
 <body>
     <div id="loginScreen" class="container" style="max-width:400px;margin-top:40px;">
         <div class="card" style="text-align:center">
-            <h2>🔐 Masuk Walk-in</h2>
-            <p style="color:#64748b;margin-bottom:16px;">Gunakan email hokben</p>
+            <div style="display:flex; justify-content:center; margin-bottom:14px;">
+                <div style="width:68px; height:68px; border-radius:18px; background:linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #0369a1 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 20px -5px rgba(2, 132, 199, 0.45); border:2.5px solid #bae6fd;">
+                    <svg viewBox="0 0 64 64" width="46" height="46" fill="none">
+                        <path d="M 6 18 C 6 10, 10 6, 18 6 L 46 6 C 54 6, 58 10, 58 18 C 54 13, 40 10, 32 10 C 20 10, 8 13, 6 18 Z" fill="#ffffff" opacity="0.45"/>
+                        <circle cx="14" cy="14" r="2" fill="#ffffff" opacity="0.6"/>
+                        <circle cx="20" cy="11" r="1.2" fill="#ffffff" opacity="0.5"/>
+                        <g stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="32" y1="13" x2="32" y2="51"/>
+                            <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+                            <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+                            <path d="M 28 19 L 32 23 L 36 19"/>
+                            <path d="M 28 45 L 32 41 L 36 45"/>
+                            <path d="M 29.5 15.5 L 32 13.5 L 34.5 15.5"/>
+                            <path d="M 29.5 48.5 L 32 50.5 L 34.5 48.5"/>
+                            <path d="M 21 21 L 24 24.5 L 21 28"/>
+                            <path d="M 43 36 L 40 39.5 L 43 43"/>
+                            <path d="M 21 43 L 24 39.5 L 21 36"/>
+                            <path d="M 43 28 L 40 24.5 L 43 21"/>
+                        </g>
+                        <circle cx="32" cy="32" r="3.6" fill="#ffffff"/>
+                        <circle cx="32" cy="32" r="1.8" fill="#0284c7"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 style="font-size:1.4rem; font-weight:700; color:var(--text-primary); margin-bottom:4px;">Walk-in R&D</h2>
+            <p style="color:#64748b;margin-bottom:18px;font-size:0.875rem;">Sistem Inventaris Frozen & Chiller HokBen</p>
             <div class="form-group"><input type="email" id="loginEmail" placeholder="Email" autocomplete="email"></div>
             <div class="form-group"><input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password"></div>
             <button class="btn btn-primary" style="width:100%" onclick="App.login()">Masuk</button>
-            <button class="google-btn" style="display:none;" onclick="App.loginWithGoogle()"><i class="fab fa-google"></i> Login dengan Google</button>
+            <button class="google-btn" onclick="App.loginWithGoogle()"><i class="fab fa-google" style="color:#ea4335;"></i> Masuk dengan Google</button>
             <p id="loginError" style="color:red;margin-top:10px;" role="alert"></p>
+            <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-secondary);display:flex;flex-direction:column;gap:6px;align-items:center;">
+                <button type="button" onclick="App.showUnauthorizedDomainModal()" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:4px 0;font-size:0.8rem;display:inline-flex;align-items:center;gap:5px;">
+                    <i class="fas fa-shield-alt"></i> Petunjuk Otorisasi Domain Firebase
+                </button>
+                <button type="button" onclick="App.showFaviconGuideModal()" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:4px 0;font-size:0.8rem;display:inline-flex;align-items:center;gap:5px;">
+                    <i class="fas fa-icons"></i> Panduan Logo Browser (GitHub Pages)
+                </button>
+            </div>
         </div>
     </div>
     
     <div id="appScreen" style="display:none;width:100%;">
         <div class="header">
-            <h2>🧊 Walk-in <span id="areaTitle">Frozen</span></h2>
+            <h2 style="display:flex; align-items:center; gap:8px;">
+                <span style="display:inline-flex; width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); align-items:center; justify-content:center; border:1px solid #bae6fd; flex-shrink:0;">
+                    <svg viewBox="0 0 64 64" width="18" height="18" fill="none">
+                        <g stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="32" y1="13" x2="32" y2="51"/>
+                            <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+                            <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+                            <path d="M 28 19 L 32 23 L 36 19"/>
+                            <path d="M 28 45 L 32 41 L 36 45"/>
+                        </g>
+                        <circle cx="32" cy="32" r="4" fill="#ffffff"/>
+                    </svg>
+                </span>
+                <span>Walk-in <span id="areaTitle">Frozen</span></span>
+            </h2>
             <div class="area-selector">
                 <label for="areaSelect" class="sr-only">Pilih Area</label>
                 <select id="areaSelect" onchange="App.switchArea()" aria-label="Pilih area penyimpanan">
@@ -712,6 +763,7 @@
                     console.error('Google login error:', err);
                     if (err.code === 'auth/unauthorized-domain') {
                         showToast('Domain aplikasi belum diizinkan di Firebase Console.', 'critical');
+                        showUnauthorizedDomainModal();
                     } else if (err.code === 'auth/popup-closed-by-user') {
                         showToast('Login dibatalkan. Silakan coba lagi dan selesaikan login Google.', 'warning');
                     } else {
@@ -722,6 +774,341 @@
         
         function logout() {
             auth.signOut().catch(console.error);
+        }
+
+        // ==================== DOMAIN AUTHORIZATION HELPERS ====================
+        function showUnauthorizedDomainModal(customDomain) {
+            let existingModal = document.getElementById('domainAuthModal');
+            if (existingModal) existingModal.remove();
+
+            const currentHostname = window.location.hostname || 'localhost';
+            let targetDomain = customDomain || (currentHostname.includes('vercel.app') ? 'walkin-web-v2.vercel.app' : (currentHostname.includes('github.io') ? currentHostname : 'pakutanam-arc.github.io'));
+            const projectId = CONFIG.firebase?.projectId || 'walk-in-web';
+            const consoleSettingsUrl = `https://console.firebase.google.com/project/${encodeURIComponent(projectId)}/authentication/settings`;
+
+            const modal = document.createElement('div');
+            modal.id = 'domainAuthModal';
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-labelledby', 'domainModalTitle');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn 0.2s ease-out;';
+
+            modal.innerHTML = `
+                <div class="card" style="width:100%;max-width:540px;max-height:90vh;overflow-y:auto;padding:22px;border-radius:18px;border:1px solid var(--border);position:relative;background:var(--bg-secondary);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);" onclick="event.stopPropagation()">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:42px;height:42px;border-radius:12px;background:#fef3c7;color:#d97706;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h3 id="domainModalTitle" style="font-size:1.15rem;font-weight:700;color:var(--text-primary);margin:0;">Otorisasi Domain Firebase</h3>
+                                <span style="font-size:0.75rem;color:var(--text-muted);">Proyek: <strong style="color:var(--text-primary);">${Utils.escapeHtml(projectId)}</strong></span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="App.closeUnauthorizedDomainModal()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);padding:4px 8px;border-radius:8px;line-height:1;" aria-label="Tutup modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div style="background:#fee2e2;border-left:4px solid #ef4444;padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:0.825rem;color:#991b1b;line-height:1.5;">
+                        <i class="fas fa-exclamation-circle" style="margin-right:4px;"></i> <strong>Pemberitahuan Keamanan:</strong> Domain ini perlu didaftarkan di <em>Authorized Domains</em> Firebase Authentication agar fitur Login Google bekerja lancar.
+                    </div>
+
+                    <!-- Domain Selection / Quick Copy -->
+                    <div style="margin-bottom:12px;">
+                        <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);display:block;margin-bottom:6px;">
+                            Pilih Domain untuk Disalin:
+                        </label>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <!-- GitHub Pages -->
+                            <div style="display:flex;align-items:center;gap:8px;background:var(--bg-tertiary);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;">
+                                <i class="fab fa-github" style="color:var(--text-primary);font-size:1.1rem;width:20px;text-align:center;"></i>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;">GitHub Pages</div>
+                                    <input type="text" id="domainGithubPages" readonly value="pakutanam-arc.github.io" style="width:100%;background:transparent;border:none;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.85rem;font-weight:700;color:var(--text-primary);padding:0;outline:none;" aria-label="Domain GitHub Pages">
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="App.copyDomainToClipboard('domainGithubPages')" style="background:white;padding:5px 10px;font-size:0.75rem;gap:4px;">
+                                    <i class="fas fa-copy"></i> Salin
+                                </button>
+                            </div>
+
+                            <!-- Vercel -->
+                            <div style="display:flex;align-items:center;gap:8px;background:var(--bg-tertiary);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;">
+                                <i class="fas fa-triangle" style="color:#000000;font-size:0.9rem;width:20px;text-align:center;"></i>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;">Vercel App</div>
+                                    <input type="text" id="domainVercelApp" readonly value="walkin-web-v2.vercel.app" style="width:100%;background:transparent;border:none;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.85rem;font-weight:700;color:var(--text-primary);padding:0;outline:none;" aria-label="Domain Vercel">
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="App.copyDomainToClipboard('domainVercelApp')" style="background:white;padding:5px 10px;font-size:0.75rem;gap:4px;">
+                                    <i class="fas fa-copy"></i> Salin
+                                </button>
+                            </div>
+
+                            ${currentHostname !== 'localhost' && currentHostname !== 'pakutanam-arc.github.io' && currentHostname !== 'walkin-web-v2.vercel.app' ? `
+                            <!-- Current Domain -->
+                            <div style="display:flex;align-items:center;gap:8px;background:var(--bg-tertiary);border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;">
+                                <i class="fas fa-laptop" style="color:var(--primary);font-size:1rem;width:20px;text-align:center;"></i>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.65rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;">Domain Browser Saat Ini</div>
+                                    <input type="text" id="domainCurrentHost" readonly value="${Utils.escapeHtml(currentHostname)}" style="width:100%;background:transparent;border:none;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.85rem;color:var(--text-secondary);padding:0;outline:none;" aria-label="Domain saat ini">
+                                </div>
+                                <button type="button" class="btn btn-sm btn-outline" onclick="App.copyDomainToClipboard('domainCurrentHost')" style="background:white;padding:5px 10px;font-size:0.75rem;gap:4px;">
+                                    <i class="fas fa-copy"></i> Salin
+                                </button>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <div style="background:#fffbeb;border:1px solid #fde68a;padding:10px 14px;border-radius:10px;margin-bottom:16px;font-size:0.8rem;color:#92400e;line-height:1.5;">
+                        <i class="fas fa-info-circle" style="color:#d97706;margin-right:4px;"></i> <strong>PENTING:</strong> Masukkan <strong>HANYA</strong> nama domain bersih (misal: <code>pakutanam-arc.github.io</code> atau <code>walkin-web-v2.vercel.app</code>). <strong>JANGAN</strong> tulis <code>https://</code> atau tanda garis miring <code>/</code>.
+                    </div>
+
+                    <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:18px;">
+                        <h4 style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                            <i class="fas fa-list-check" style="color:var(--primary);"></i> 5 Langkah Mudah di Firebase Console:
+                        </h4>
+                        <ol style="margin:0;padding-left:18px;font-size:0.825rem;color:var(--text-secondary);line-height:1.6;display:flex;flex-direction:column;gap:5px;">
+                            <li>Buka <strong>Firebase Console</strong> lalu pilih proyek <strong>${Utils.escapeHtml(projectId)}</strong>.</li>
+                            <li>Pada menu navigasi kiri, pilih <strong>Build</strong> &rarr; <strong>Authentication</strong>.</li>
+                            <li>Buka tab <strong>Settings</strong> di atas &rarr; pilih <strong>Authorized domains</strong>.</li>
+                            <li>Klik tombol <strong>+ Add domain</strong> lalu tempel/paste domain (contoh: <code>pakutanam-arc.github.io</code> dan <code>walkin-web-v2.vercel.app</code>).</li>
+                            <li>Klik <strong>Save / Add</strong>. Tunggu 1–3 menit, lalu refresh halaman web.</li>
+                        </ol>
+                    </div>
+
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <a href="${consoleSettingsUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex:1;min-width:200px;text-decoration:none;font-size:0.875rem;padding:11px 16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                            <i class="fas fa-external-link-alt"></i> Buka Pengaturan Firebase
+                        </a>
+                        <button type="button" class="btn btn-outline" onclick="App.closeUnauthorizedDomainModal()" style="padding:11px 18px;font-size:0.875rem;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeUnauthorizedDomainModal();
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        function closeUnauthorizedDomainModal() {
+            const modal = document.getElementById('domainAuthModal');
+            if (modal) modal.remove();
+        }
+
+        function copyDomainToClipboard(elementIdOrText) {
+            let textToCopy = '';
+            if (elementIdOrText === 'githubPagesDomainDirect') {
+                textToCopy = 'pakutanam-arc.github.io';
+            } else if (elementIdOrText === 'vercelDomainDirect') {
+                textToCopy = 'walkin-web-v2.vercel.app';
+            } else {
+                const el = document.getElementById(elementIdOrText);
+                textToCopy = el ? (el.value || el.textContent) : elementIdOrText;
+            }
+            if (!textToCopy) textToCopy = 'pakutanam-arc.github.io';
+            textToCopy = textToCopy.trim();
+
+            copyToClipboard(textToCopy);
+            showToast('✅ Domain "' + textToCopy + '" disalin ke clipboard!');
+        }
+
+        // ==================== FAVICON & LOGO HELPERS ====================
+        const FAVICON_HTML_SNIPPET = `<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='64' height='64'%3E%3Cdefs%3E%3ClinearGradient id='iceGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2338bdf8'/%3E%3Cstop offset='50%25' stop-color='%230284c7'/%3E%3Cstop offset='100%25' stop-color='%230369a1'/%3E%3C/linearGradient%3E%3Cfilter id='iceShadow' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='2' stdDeviation='2' flood-color='%23082f49' flood-opacity='0.35'/%3E%3C/filter%3E%3C/defs%3E%3Crect x='3' y='3' width='58' height='58' rx='14' fill='url(%23iceGrad)' stroke='%23bae6fd' stroke-width='2.5' filter='url(%23iceShadow)'/%3E%3Cpath d='M 6 18 C 6 10, 10 6, 18 6 L 46 6 C 54 6, 58 10, 58 18 C 54 13, 40 10, 32 10 C 20 10, 8 13, 6 18 Z' fill='%23ffffff' opacity='0.45'/%3E%3Ccircle cx='14' cy='14' r='2' fill='%23ffffff' opacity='0.6'/%3E%3Ccircle cx='20' cy='11' r='1.2' fill='%23ffffff' opacity='0.5'/%3E%3Cg stroke='%23ffffff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='32' y1='13' x2='32' y2='51'/%3E%3Cline x1='15.5' y1='22.5' x2='48.5' y2='41.5'/%3E%3Cline x1='15.5' y1='41.5' x2='48.5' y2='22.5'/%3E%3Cpath d='M 28 19 L 32 23 L 36 19'/%3E%3Cpath d='M 28 45 L 32 41 L 36 45'/%3E%3Cpath d='M 29.5 15.5 L 32 13.5 L 34.5 15.5'/%3E%3Cpath d='M 29.5 48.5 L 32 50.5 L 34.5 48.5'/%3E%3Cpath d='M 21 21 L 24 24.5 L 21 28'/%3E%3Cpath d='M 43 36 L 40 39.5 L 43 43'/%3E%3Cpath d='M 21 43 L 24 39.5 L 21 36'/%3E%3Cpath d='M 43 28 L 40 24.5 L 43 21'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='3.6' fill='%23ffffff'/%3E%3Ccircle cx='32' cy='32' r='1.8' fill='%230284c7'/%3E%3C/svg%3E">
+<link rel="alternate icon" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./favicon.svg">
+<meta name="theme-color" content="#0f172a">`;
+
+        function showFaviconGuideModal() {
+            let existingModal = document.getElementById('faviconGuideModal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'faviconGuideModal';
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-labelledby', 'faviconModalTitle');
+            modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn 0.2s ease-out;';
+
+            modal.innerHTML = `
+                <div class="card" style="width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:24px;border-radius:18px;border:1px solid var(--border);position:relative;background:var(--bg-secondary);box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);" onclick="event.stopPropagation()">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);display:flex;align-items:center;justify-content:center;border:1.5px solid #bae6fd;flex-shrink:0;">
+                                <svg viewBox="0 0 64 64" width="28" height="28" fill="none">
+                                    <g stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="32" y1="13" x2="32" y2="51"/>
+                                        <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+                                        <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+                                        <path d="M 28 19 L 32 23 L 36 19"/>
+                                        <path d="M 28 45 L 32 41 L 36 45"/>
+                                    </g>
+                                    <circle cx="32" cy="32" r="4.5" fill="#ffffff"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 id="faviconModalTitle" style="font-size:1.15rem;font-weight:700;color:var(--text-primary);margin:0;">Logo Tab Browser (Favicon)</h3>
+                                <span style="font-size:0.75rem;color:var(--text-muted);">Balok Es & Kristal Salju khas Walk-in Frozen</span>
+                            </div>
+                        </div>
+                        <button type="button" onclick="App.closeFaviconGuideModal()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-muted);padding:4px 8px;border-radius:8px;line-height:1;" aria-label="Tutup modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- Browser Tab Simulation Preview -->
+                    <div style="background:#0f172a;border-radius:12px;padding:12px 14px;margin-bottom:16px;">
+                        <div style="font-size:0.7rem;color:#94a3b8;font-weight:600;text-transform:uppercase;margin-bottom:8px;">
+                            Simulasi Tampilan Tab Browser:
+                        </div>
+                        <div style="display:inline-flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px 8px 0 0;padding:8px 14px;color:#f8fafc;font-size:0.8rem;font-weight:500;box-shadow:0 2px 4px rgba(0,0,0,0.2);">
+                            <span style="display:inline-flex;width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);align-items:center;justify-content:center;border:1px solid #bae6fd;">
+                                <svg viewBox="0 0 64 64" width="12" height="12" fill="none">
+                                    <g stroke="#ffffff" stroke-width="4.5" stroke-linecap="round">
+                                        <line x1="32" y1="13" x2="32" y2="51"/>
+                                        <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+                                        <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+                                    </g>
+                                    <circle cx="32" cy="32" r="5" fill="#ffffff"/>
+                                </svg>
+                            </span>
+                            <span style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Walk-in Frozen & Chiller | v2.0</span>
+                            <i class="fas fa-times" style="font-size:0.65rem;color:#64748b;margin-left:4px;"></i>
+                        </div>
+                        <div style="height:2px;background:#38bdf8;border-radius:1px;"></div>
+                    </div>
+
+                    <!-- Code Snippet Area -->
+                    <div style="margin-bottom:16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin:0;">
+                                Kode Tag HTML (Untuk GitHub Pages & Web):
+                            </label>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="App.copyFaviconSnippet()" style="padding:4px 10px;font-size:0.75rem;gap:4px;">
+                                <i class="fas fa-copy"></i> Salin Kode
+                            </button>
+                        </div>
+                        <div style="position:relative;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:12px;overflow:hidden;">
+                            <pre style="margin:0;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:0.75rem;color:#38bdf8;white-space:pre-wrap;word-break:break-all;max-height:110px;overflow-y:auto;line-height:1.4;">&lt;!-- Favicon Walk-in Frozen --&gt;
+&lt;link rel="icon" type="image/svg+xml" href="data:image/svg+xml,...(vektor balok es &amp; salju)..."&gt;
+&lt;link rel="alternate icon" href="./favicon.svg"&gt;
+&lt;link rel="apple-touch-icon" href="./favicon.svg"&gt;
+&lt;meta name="theme-color" content="#0f172a"&gt;</pre>
+                        </div>
+                    </div>
+
+                    <!-- GitHub Pages & Vercel Deployment Instructions -->
+                    <div style="background:var(--bg-tertiary);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px;">
+                        <h4 style="font-size:0.85rem;font-weight:700;color:var(--text-primary);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                            <i class="fab fa-github" style="color:var(--text-primary);"></i> Dua Cara Penerapan (Pilih Salah Satu):
+                        </h4>
+
+                        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px;">
+                            <strong style="font-size:0.825rem;color:var(--primary);display:block;margin-bottom:4px;">
+                                🚀 Cara 1: Langsung Push via Git (Tanpa Edit HTML Manual)
+                            </strong>
+                            <p style="margin:0 0 6px 0;font-size:0.8rem;color:var(--text-secondary);line-height:1.4;">
+                                Jika Anda mengelola repositori lokal di komputer, cukup gunakan file <code>index.html</code> dan <code>public/favicon.svg</code> terbaru dari proyek ini lalu jalankan di terminal:
+                            </p>
+                            <pre style="margin:0;padding:6px 10px;background:#0f172a;border-radius:6px;font-size:0.75rem;color:#38bdf8;font-family:monospace;white-space:pre-wrap;">git add index.html favicon.svg public/favicon.svg
+git commit -m "Update Walk-in Frozen logo favicon"
+git push origin main</pre>
+                            <div style="margin-top:6px;font-size:0.75rem;color:#10b981;font-weight:600;">
+                                <i class="fas fa-check-circle"></i> Otomatis langsung aktif di <strong>GitHub Pages</strong> dan <strong>Vercel</strong>!
+                            </div>
+                        </div>
+
+                        <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:10px;padding:10px 12px;">
+                            <strong style="font-size:0.825rem;color:var(--text-primary);display:block;margin-bottom:4px;">
+                                ✏️ Cara 2: Salin Manual di Web Editor GitHub
+                            </strong>
+                            <p style="margin:0;font-size:0.8rem;color:var(--text-secondary);line-height:1.4;">
+                                Jika Anda tidak membuka Git lokal, cukup klik <strong>"Salin Kode"</strong> di atas, buka <code>index.html</code> di browser GitHub, tempelkan di dalam tag <code>&lt;head&gt;</code>, lalu Commit.
+                            </p>
+                        </div>
+
+                        <div style="margin-top:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:0.775rem;color:#1e40af;line-height:1.4;">
+                            <i class="fas fa-info-circle"></i> <strong>Domain Vercel (<code>walkin-web-v2.vercel.app</code>):</strong> Favicon <strong>otomatis berlaku</strong> di domain Vercel karena membaca tag <code>&lt;link rel="icon"&gt;</code> yang sama.
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button type="button" class="btn btn-primary" onclick="App.copyFaviconSnippet()" style="flex:1;min-width:180px;font-size:0.875rem;padding:10px 16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                            <i class="fas fa-copy"></i> Salin Tag Favicon
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="App.downloadFaviconSvg()" style="font-size:0.875rem;padding:10px 14px;display:inline-flex;align-items:center;gap:6px;">
+                            <i class="fas fa-download"></i> Unduh favicon.svg
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="App.closeFaviconGuideModal()" style="font-size:0.875rem;padding:10px 16px;">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeFaviconGuideModal();
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        function closeFaviconGuideModal() {
+            const modal = document.getElementById('faviconGuideModal');
+            if (modal) modal.remove();
+        }
+
+        function copyFaviconSnippet() {
+            copyToClipboard(FAVICON_HTML_SNIPPET);
+            showToast('✅ Tag HTML Favicon berhasil disalin! Silakan tempel di index.html GitHub Pages.');
+        }
+
+        function downloadFaviconSvg() {
+            const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="iceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <filter id="iceShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#082f49" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="url(#iceGrad)" stroke="#bae6fd" stroke-width="2.5" filter="url(#iceShadow)"/>
+  <path d="M 6 18 C 6 10, 10 6, 18 6 L 46 6 C 54 6, 58 10, 58 18 C 54 13, 40 10, 32 10 C 20 10, 8 13, 6 18 Z" fill="#ffffff" opacity="0.45"/>
+  <circle cx="14" cy="14" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="20" cy="11" r="1.2" fill="#ffffff" opacity="0.5"/>
+  <g stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="32" y1="13" x2="32" y2="51"/>
+    <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+    <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+    <path d="M 28 19 L 32 23 L 36 19"/>
+    <path d="M 28 45 L 32 41 L 36 45"/>
+    <path d="M 29.5 15.5 L 32 13.5 L 34.5 15.5"/>
+    <path d="M 29.5 48.5 L 32 50.5 L 34.5 48.5"/>
+    <path d="M 21 21 L 24 24.5 L 21 28"/>
+    <path d="M 43 36 L 40 39.5 L 43 43"/>
+    <path d="M 21 43 L 24 39.5 L 21 36"/>
+    <path d="M 43 28 L 40 24.5 L 43 21"/>
+  </g>
+  <circle cx="32" cy="32" r="3.6" fill="#ffffff"/>
+  <circle cx="32" cy="32" r="1.8" fill="#0284c7"/>
+</svg>`;
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'favicon.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('⬇️ Mengunduh favicon.svg...');
         }
         
         // ✅ Hardened admin check - should be validated server-side too
@@ -3959,6 +4346,89 @@ function saveEstDate(basketNum, itemIdx) {
                             <input type="file" accept=".json" style="display:none;" onchange="App.restoreDatabaseJSON(event)">
                         </label>
                     </div>
+
+                    <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:16px; margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                            <h4 style="color:var(--text-primary); margin:0; display:flex; align-items:center; gap:8px; font-size:0.95rem; font-weight:700;">
+                                <i class="fas fa-globe" style="color:var(--primary);"></i> Status Domain & Firebase Auth
+                            </h4>
+                            <span style="font-size:0.75rem; background:var(--primary-light); color:var(--primary); padding:3px 10px; border-radius:100px; font-weight:600;">
+                                Proyek: ${Utils.escapeHtml(CONFIG.firebase.projectId)}
+                            </span>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px; margin-bottom:12px;">
+                            <div style="background:var(--bg-tertiary); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
+                                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Domain Saat Ini</div>
+                                <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); font-family:monospace; margin-top:2px; word-break:break-all;">
+                                    ${Utils.escapeHtml(window.location.hostname || 'localhost')}
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-tertiary); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
+                                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">GitHub Pages</div>
+                                <div style="font-size:0.85rem; font-weight:700; color:var(--primary); font-family:monospace; margin-top:2px;">
+                                    pakutanam-arc.github.io
+                                </div>
+                            </div>
+                            <div style="background:var(--bg-tertiary); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
+                                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Vercel App</div>
+                                <div style="font-size:0.85rem; font-weight:700; color:#0284c7; font-family:monospace; margin-top:2px;">
+                                    walkin-web-v2.vercel.app
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
+                            Jika login Google di GitHub Pages atau Vercel mengalami error <code>auth/unauthorized-domain</code>, daftarkan domain tersebut pada <em>Authorized domains</em> di Firebase Console.
+                        </p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button class="btn btn-sm btn-primary" style="font-size:0.8rem;" onclick="App.showUnauthorizedDomainModal()">
+                                <i class="fas fa-shield-alt"></i> Petunjuk Otorisasi Domain
+                            </button>
+                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.copyDomainToClipboard('githubPagesDomainDirect')">
+                                <i class="fab fa-github"></i> Salin Domain GitHub
+                            </button>
+                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.copyDomainToClipboard('vercelDomainDirect')">
+                                <i class="fas fa-copy"></i> Salin Domain Vercel
+                            </button>
+                            <a href="https://console.firebase.google.com/project/${encodeURIComponent(CONFIG.firebase.projectId)}/authentication/settings" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" style="font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                                <i class="fas fa-external-link-alt"></i> Buka Firebase Console
+                            </a>
+                        </div>
+                    </div>
+
+                    <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:12px; margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                            <h4 style="color:var(--text-primary); margin:0; display:flex; align-items:center; gap:8px; font-size:0.95rem; font-weight:700;">
+                                <span style="display:inline-flex; width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); align-items:center; justify-content:center; border:1px solid #bae6fd;">
+                                    <svg viewBox="0 0 64 64" width="14" height="14" fill="none">
+                                        <g stroke="#ffffff" stroke-width="4" stroke-linecap="round">
+                                            <line x1="32" y1="13" x2="32" y2="51"/>
+                                            <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+                                            <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+                                        </g>
+                                        <circle cx="32" cy="32" r="5" fill="#ffffff"/>
+                                    </svg>
+                                </span>
+                                Logo Browser (Favicon) Walk-in Frozen
+                            </h4>
+                            <span style="font-size:0.75rem; background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:100px; font-weight:600;">
+                                <i class="fas fa-check-circle"></i> Aktif di GitHub Pages & Vercel
+                            </span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
+                            Logo balok es & kristal salju telah aktif di tab browser. Berlaku untuk <strong>GitHub Pages</strong> maupun <strong>Vercel</strong> (<code>walkin-web-v2.vercel.app</code>) setelah di-push ke repositori.
+                        </p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button class="btn btn-sm btn-primary" style="font-size:0.8rem;" onclick="App.copyFaviconSnippet()">
+                                <i class="fas fa-copy"></i> Salin Tag Favicon (GitHub Pages)
+                            </button>
+                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.showFaviconGuideModal()">
+                                <i class="fas fa-book-open"></i> Panduan Lengkap
+                            </button>
+                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.downloadFaviconSvg()">
+                                <i class="fas fa-download"></i> Unduh favicon.svg
+                            </button>
+                        </div>
+                    </div>
                     
                     <hr style="border:none; border-top:1px dashed var(--border); margin:24px 0;">
                     <h4 style="margin-bottom:16px;"><i class="fas fa-clipboard-check" style="color:var(--primary);"></i> Audit & Sinkronisasi Slot Fisik</h4>
@@ -4376,6 +4846,14 @@ function saveEstDate(basketNum, itemIdx) {
             
             // Set initial area
             DOM.areaSelect.value = state.currentArea;
+
+            // Global Escape key to dismiss modals
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeUnauthorizedDomainModal();
+                    closeFaviconGuideModal();
+                }
+            });
         }
         
         // Expose public API
@@ -4394,7 +4872,9 @@ function saveEstDate(basketNum, itemIdx) {
             exportReminderCSV, navigateToBasketFromReminder, renderManageBaskets,
             clearSlot, fillSlot, addBaris, toggleRetainSample,
             downloadDatabaseJSON, migrateDatabase, resetAllData, searchByStatus,
-            restoreDatabaseJSON
+            restoreDatabaseJSON,
+            showUnauthorizedDomainModal, closeUnauthorizedDomainModal, copyDomainToClipboard,
+            showFaviconGuideModal, closeFaviconGuideModal, copyFaviconSnippet, downloadFaviconSvg
         };
     })();
     
