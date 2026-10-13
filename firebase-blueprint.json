@@ -1,0 +1,21 @@
+{
+  "entities": {
+    "Item": {
+      "title": "Item",
+      "description": "An item in the Walk-in Frozen & Chiller inventory",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "quantity": { "type": "number" },
+        "category": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["name", "quantity", "category"]
+    }
+  },
+  "firestore": {
+    "items/{itemId}": {
+      "schema": "Item",
+      "description": "Items in the inventory"
+    }
+  }
+}

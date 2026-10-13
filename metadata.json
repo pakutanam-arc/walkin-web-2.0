@@ -1,0 +1,6 @@
+{
+  "name": "Walk-in Frozen & Chiller",
+  "description": "Sistem manajemen inventaris gudang penyimpanan beku (Frozen) dan pendingin (Chiller) dengan pelacakan lokasi keranjang, FEFO, rekap pergerakan barang, dan asisten AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
