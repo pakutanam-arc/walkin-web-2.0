@@ -1,41 +1,34 @@
-# Rencana Implementasi: Penyesuaian Posisi Tombol & Jendela Chat AI
+# Rencana Implementasi: Barcode / QR Code Web Walk-in dengan Favicon [SELESAI]
 
-Menurunkan posisi tombol bulat chat AI dan jendela popup chat ke sudut kanan bawah standar (20px dari tepi bawah layar) serta mencegah elemen terpotong pada berbagai ukuran layar.
-
----
-
-### User Review Required
-
-> [!NOTE]
-> Berdasarkan preferensi Anda:
-> - Tombol bulat chat dan jendela chat diturunkan ke sudut kanan bawah.
-> - Jarak dari tepi bawah layar diatur menjadi **20px** (posisi standar floating action button).
-> - Jendela chat diberi batas tinggi dinamis (`max-height: calc(100vh - 110px)`) agar tidak meluap atau terpotong di bagian atas layar.
+Menyediakan generator QR Code beresolusi tinggi untuk URL web Walk-in (`https://walkin-web-v2.vercel.app/`) dengan logo favicon Walk-in Frozen (kristal es/salju) di bagian tengah. Fitur ini ditempatkan di tab **⚙️ Pengaturan** khusus untuk akun Admin, lengkap dengan tombol **Unduh Gambar (PNG)**, tombol **Bagikan (Web Share API)**, serta tombol **Salin Link**.
 
 ---
 
-### Perubahan yang Diusulkan
+## 1. Arsitektur & Teknologi (Telah Diterapkan)
 
-#### File: `index.html`
-
-- **Update CSS `.chat-widget`**:
-  - Ubah `bottom: 80px;` menjadi `bottom: 20px;`.
-  - Pertahankan `right: 20px;` dan `z-index: 1000;`.
-  - Hasil: Tombol bulat chat berada persis di sudut kanan bawah dengan jarak nyaman 20px dari tepi layar.
-
-- **Update CSS `.chat-window`**:
-  - Pertahankan `position: absolute; bottom: 70px; right: 0;` sehingga jendela muncul tepat di atas tombol bulat chat tanpa saling menimpa.
-  - Perbaiki `max-height: 80vh;` menjadi `max-height: calc(100vh - 110px);` untuk menjamin header atau footer jendela chat tidak pernah terpotong di layar laptop/desktop beresolusi rendah.
-  - Pastikan tampilan mobile (`max-width: 480px`) tetap full-screen bersih dan tertutup rapat saat digunakan di smartphone.
+1. **Library QR Code**:
+   * Menambahkan library standar dan andal `easyqrcodejs@4.6.1` via CDN di `<head>` `index.html`.
+   * Menghasilkan QR Code dengan level koreksi kesalahan tertinggi (**Error Correction Level 'H' / High - 30%**), memastikan logo favicon di tengah tidak mengganggu pemindaian kamera HP.
+   * Dilengkapi sistem **fallback native HTML5 Canvas** jika akses CDN offline/terkendala.
+2. **Kustomisasi Visual & Logo Favicon**:
+   * Menghasilkan canvas beresolusi tinggi (540x540 px) untuk hasil cetak dan unduhan yang jernih.
+   * Di bagian tengah QR Code, ditambahkan latar lingkaran putih bersih (*badge shield*) dan logo favicon Walk-in (balok es & kristal salju biru) secara presisi.
+3. **Penempatan di Menu Pengaturan (Manage)**:
+   * Ditambahkan sebagai kartu khusus di dalam `renderManageBaskets()` yang hanya dapat dilihat dan diakses oleh akun **Admin** (`isAdmin()`).
+   * Menampilkan pratinjau QR Code yang responsif, URL target `https://walkin-web-v2.vercel.app/`, serta informasi status siap pindai.
+4. **Fitur Unduh & Berbagi**:
+   * **Unduh PNG**: Menyimpan QR Code berkualitas tinggi langsung ke perangkat dengan nama file `walkin-web-qrcode.png`.
+   * **Bagikan (Web Share API)**: Menggunakan `navigator.share` untuk membagikan file gambar QR Code atau tautan langsung ke WhatsApp, Telegram, Email, atau aplikasi media sosial lainnya di perangkat seluler / desktop.
+   * **Salin Tautan**: Tombol cepat untuk menyalin URL `https://walkin-web-v2.vercel.app/` ke papan klip (*clipboard*) disertai notifikasi toast.
 
 ---
 
-### Verification Plan
+## 2. Status Hasil Pengujian
 
-1. **Uji Tampilan Desktop/Laptop**:
-   - Buka halaman aplikasi.
-   - Verifikasi posisi tombol bulat chat AI berada di pojok kanan bawah berjarak 20px dari bawah layar.
-   - Klik tombol untuk membuka jendela chat, pastikan header ("R&D Assistant AI"), isi pesan, dan input bar ("Ketik pesan...") terlihat utuh tanpa ada yang terpotong.
-2. **Uji Responsivitas**:
-   - Verifikasi tidak ada tumpang tindih dengan elemen login atau navigasi dasar.
-   - Jalankan `compile_applet` untuk memastikan tidak ada kesalahan sintaksis atau regresi pada aplikasi.
+- [x] Library EasyQRCodeJS terpasang di `<head>` `index.html`.
+- [x] Kartu `Barcode & QR Code Akses Web Walk-in` tampil di tab **⚙️ Pengaturan** khusus Admin.
+- [x] Pembuatan QR code beresolusi tinggi (540x540) dengan logo favicon kristal salju Walk-in di tengah berjalan otomatis.
+- [x] Tombol **Unduh Gambar (PNG)** mengekspor `walkin-web-qrcode.png`.
+- [x] Tombol **Bagikan (Share)** mendukung Web Share API (berkas gambar/link) dengan fallback clipboard.
+- [x] Tombol **Salin Link** menyalin `https://walkin-web-v2.vercel.app/`.
+- [x] Build dan lint lulus tanpa error.

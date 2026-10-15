@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.6.1/dist/easy.qrcode.min.js" crossorigin="anonymous"></script>
     <style>
         :root {
             --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9;
@@ -1139,6 +1140,245 @@ git push origin main</pre>
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast('⬇️ Mengunduh favicon.svg...');
+        }
+
+        // ==================== WALKIN WEB BARCODE & QR CODE ====================
+        const WALKIN_WEB_URL = 'https://walkin-web-v2.vercel.app/';
+        const WALKIN_FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="iceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <filter id="iceShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#082f49" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="14" fill="url(#iceGrad)" stroke="#bae6fd" stroke-width="2.5" filter="url(#iceShadow)"/>
+  <path d="M 6 18 C 6 10, 10 6, 18 6 L 46 6 C 54 6, 58 10, 58 18 C 54 13, 40 10, 32 10 C 20 10, 8 13, 6 18 Z" fill="#ffffff" opacity="0.45"/>
+  <circle cx="14" cy="14" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="20" cy="11" r="1.2" fill="#ffffff" opacity="0.5"/>
+  <g stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="32" y1="13" x2="32" y2="51"/>
+    <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
+    <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
+    <path d="M 28 19 L 32 23 L 36 19"/>
+    <path d="M 28 45 L 32 41 L 36 45"/>
+    <path d="M 29.5 15.5 L 32 13.5 L 34.5 15.5"/>
+    <path d="M 29.5 48.5 L 32 50.5 L 34.5 48.5"/>
+    <path d="M 21 21 L 24 24.5 L 21 28"/>
+    <path d="M 43 36 L 40 39.5 L 43 43"/>
+    <path d="M 21 43 L 24 39.5 L 21 36"/>
+    <path d="M 43 28 L 40 24.5 L 43 21"/>
+  </g>
+  <circle cx="32" cy="32" r="3.6" fill="#ffffff"/>
+  <circle cx="32" cy="32" r="1.8" fill="#0284c7"/>
+</svg>`;
+
+        function generateWebQRCode() {
+            const container = document.getElementById('walkinQrContainer');
+            if (!container) return;
+
+            container.innerHTML = `
+                <div id="walkinQrLoading" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:240px; height:240px; color:var(--text-muted); font-size:0.85rem; gap:10px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:1.6rem; color:var(--primary);"></i>
+                    <span>Membuat QR Code Beresolusi Tinggi...</span>
+                </div>
+            `;
+
+            const svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(WALKIN_FAVICON_SVG);
+
+            const finishRender = (canvas) => {
+                if (!canvas) return;
+                canvas.id = 'walkinQrActiveCanvas';
+                canvas.style.cssText = 'width:240px; height:240px; display:block; border-radius:12px; max-width:100%; box-shadow:0 4px 12px rgba(15,23,42,0.08);';
+                container.innerHTML = '';
+                container.appendChild(canvas);
+            };
+
+            // 1. Coba gunakan library EasyQRCodeJS jika tersedia
+            if (typeof QRCode !== 'undefined') {
+                try {
+                    const tempDiv = document.createElement('div');
+                    new QRCode(tempDiv, {
+                        text: WALKIN_WEB_URL,
+                        width: 540,
+                        height: 540,
+                        colorDark: "#0f172a",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H,
+                        logo: svgDataUrl,
+                        logoWidth: 124,
+                        logoHeight: 124,
+                        logoBackgroundColor: '#ffffff',
+                        logoBackgroundTransparent: false,
+                        quietZone: 18,
+                        quietZoneColor: '#ffffff',
+                        onRenderingEnd: function(options, dataURL) {
+                            const canvas = tempDiv.querySelector('canvas');
+                            if (canvas) {
+                                finishRender(canvas);
+                            } else if (dataURL) {
+                                const imgCanvas = document.createElement('canvas');
+                                imgCanvas.width = 540;
+                                imgCanvas.height = 540;
+                                const ctx = imgCanvas.getContext('2d');
+                                const img = new Image();
+                                img.onload = () => {
+                                    ctx.drawImage(img, 0, 0);
+                                    finishRender(imgCanvas);
+                                };
+                                img.src = dataURL;
+                            }
+                        }
+                    });
+
+                    // Penanganan fallback cepat jika render selesai sinkron
+                    const synCanvas = tempDiv.querySelector('canvas');
+                    if (synCanvas) {
+                        setTimeout(() => {
+                            const activeCanvas = tempDiv.querySelector('canvas');
+                            if (activeCanvas && !document.getElementById('walkinQrActiveCanvas')) {
+                                finishRender(activeCanvas);
+                            }
+                        }, 80);
+                    }
+                    return;
+                } catch (e) {
+                    console.warn('EasyQRCodeJS error, beralih ke canvas fallback:', e);
+                }
+            }
+
+            // 2. Fallback Canvas generator jika library CDN terlambat dimuat
+            const qrImg = new Image();
+            qrImg.crossOrigin = 'anonymous';
+            qrImg.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 540;
+                canvas.height = 540;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, 540, 540);
+                ctx.drawImage(qrImg, 0, 0, 540, 540);
+
+                // Tambahkan logo favicon di bagian tengah dengan badge putih
+                const favImg = new Image();
+                favImg.onload = () => {
+                    const center = 270;
+                    const logoSize = 114;
+                    const half = logoSize / 2;
+
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(15, 23, 42, 0.2)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetY = 3;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.beginPath();
+                    ctx.arc(center, center, half + 9, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#e2e8f0';
+                    ctx.stroke();
+                    ctx.restore();
+
+                    ctx.drawImage(favImg, center - half, center - half, logoSize, logoSize);
+                    finishRender(canvas);
+                };
+                favImg.src = svgDataUrl;
+            };
+            qrImg.onerror = () => {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:18px; color:var(--danger);">
+                        <i class="fas fa-exclamation-circle" style="font-size:2rem; margin-bottom:8px;"></i>
+                        <div style="font-size:0.85rem; font-weight:600;">Gagal memuat QR Code</div>
+                        <button class="btn btn-sm btn-outline" style="margin-top:10px;" onclick="App.generateWebQRCode()">Coba Lagi</button>
+                    </div>
+                `;
+            };
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=540x540&data=${encodeURIComponent(WALKIN_WEB_URL)}&ecc=H`;
+        }
+
+        function downloadWebQRCode() {
+            const canvas = document.getElementById('walkinQrActiveCanvas') || document.querySelector('#walkinQrContainer canvas');
+            if (!canvas) {
+                showToast('⚠️ QR Code sedang diproses, silakan tunggu sebentar...', 'warning');
+                return;
+            }
+
+            try {
+                const link = document.createElement('a');
+                link.download = 'walkin-web-qrcode.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('📥 Gambar QR Code berhasil diunduh (walkin-web-qrcode.png)');
+            } catch (err) {
+                console.error('Download QR Code error:', err);
+                showToast('❌ Gagal mengunduh QR Code: ' + err.message, 'critical');
+            }
+        }
+
+        async function shareWebQRCode() {
+            const canvas = document.getElementById('walkinQrActiveCanvas') || document.querySelector('#walkinQrContainer canvas');
+            const shareData = {
+                title: 'Walk-in Cold Storage R&D',
+                text: 'Akses cepat aplikasi Web Walk-in Frozen & Chiller:\n' + WALKIN_WEB_URL,
+                url: WALKIN_WEB_URL
+            };
+
+            if (!navigator.share) {
+                copyToClipboard(WALKIN_WEB_URL);
+                showToast('📋 Web Share tidak didukung di peramban ini. Tautan web berhasil disalin ke papan klip!');
+                return;
+            }
+
+            if (canvas && canvas.toBlob) {
+                canvas.toBlob(async (blob) => {
+                    try {
+                        if (blob) {
+                            const file = new File([blob], 'walkin-web-qrcode.png', { type: 'image/png' });
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                await navigator.share({
+                                    ...shareData,
+                                    files: [file]
+                                });
+                                showToast('✅ Berhasil membagikan QR Code!');
+                                return;
+                            }
+                        }
+                    } catch (shareErr) {
+                        if (shareErr.name === 'AbortError') return;
+                        console.warn('Share berkas gagal, mencoba membagikan tautan URL:', shareErr);
+                    }
+
+                    // Fallback berbagi URL teks
+                    try {
+                        await navigator.share(shareData);
+                        showToast('✅ Berhasil membagikan tautan web!');
+                    } catch (urlShareErr) {
+                        if (urlShareErr.name === 'AbortError') return;
+                        copyToClipboard(WALKIN_WEB_URL);
+                        showToast('📋 Tautan web disalin ke papan klip!');
+                    }
+                }, 'image/png');
+            } else {
+                try {
+                    await navigator.share(shareData);
+                    showToast('✅ Berhasil membagikan link Walk-in!');
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        copyToClipboard(WALKIN_WEB_URL);
+                        showToast('📋 Tautan web disalin ke papan klip!');
+                    }
+                }
+            }
+        }
+
+        function copyWebLink() {
+            copyToClipboard(WALKIN_WEB_URL);
+            showToast('📋 Tautan https://walkin-web-v2.vercel.app/ berhasil disalin!');
         }
         
         // ✅ Hardened admin check - should be validated server-side too
@@ -4405,85 +4645,51 @@ function saveEstDate(basketNum, itemIdx) {
                         </label>
                     </div>
 
-                    <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:16px; margin-bottom:8px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-                            <h4 style="color:var(--text-primary); margin:0; display:flex; align-items:center; gap:8px; font-size:0.95rem; font-weight:700;">
-                                <i class="fas fa-globe" style="color:var(--primary);"></i> Status Domain & Firebase Auth
-                            </h4>
-                            <span style="font-size:0.75rem; background:var(--primary-light); color:var(--primary); padding:3px 10px; border-radius:100px; font-weight:600;">
-                                Proyek: ${Utils.escapeHtml(CONFIG.firebase.projectId)}
-                            </span>
-                        </div>
-                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px; margin-bottom:12px;">
-                            <div style="background:var(--bg-tertiary); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
-                                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Domain Saat Ini</div>
-                                <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); font-family:monospace; margin-top:2px; word-break:break-all;">
-                                    ${Utils.escapeHtml(window.location.hostname || 'localhost')}
-                                </div>
-                            </div>
-                            <div style="background:var(--bg-tertiary); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
-                                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">GitHub Pages</div>
-                                <div style="font-size:0.85rem; font-weight:700; color:var(--primary); font-family:monospace; margin-top:2px;">
-                                    pakutanam-arc.github.io
-                                </div>
-                            </div>
-                            <div style="background:var(--bg-tertiary); padding:10px 12px; border-radius:10px; border:1px solid var(--border);">
-                                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Vercel App</div>
-                                <div style="font-size:0.85rem; font-weight:700; color:#0284c7; font-family:monospace; margin-top:2px;">
-                                    walkin-web-v2.vercel.app
-                                </div>
-                            </div>
-                        </div>
-                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
-                            Jika login Google di GitHub Pages atau Vercel mengalami error <code>auth/unauthorized-domain</code>, daftarkan domain tersebut pada <em>Authorized domains</em> di Firebase Console.
-                        </p>
-                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <button class="btn btn-sm btn-primary" style="font-size:0.8rem;" onclick="App.showUnauthorizedDomainModal()">
-                                <i class="fas fa-shield-alt"></i> Petunjuk Otorisasi Domain
-                            </button>
-                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.copyDomainToClipboard('githubPagesDomainDirect')">
-                                <i class="fab fa-github"></i> Salin Domain GitHub
-                            </button>
-                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.copyDomainToClipboard('vercelDomainDirect')">
-                                <i class="fas fa-copy"></i> Salin Domain Vercel
-                            </button>
-                            <a href="https://console.firebase.google.com/project/${encodeURIComponent(CONFIG.firebase.projectId)}/authentication/settings" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" style="font-size:0.8rem; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
-                                <i class="fas fa-external-link-alt"></i> Buka Firebase Console
-                            </a>
-                        </div>
-                    </div>
-
+                    <!-- KARTU BARCODE / QR CODE WEB WALKIN DENGAN FAVICON -->
                     <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:16px; margin-top:12px; margin-bottom:8px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
                             <h4 style="color:var(--text-primary); margin:0; display:flex; align-items:center; gap:8px; font-size:0.95rem; font-weight:700;">
-                                <span style="display:inline-flex; width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); align-items:center; justify-content:center; border:1px solid #bae6fd;">
-                                    <svg viewBox="0 0 64 64" width="14" height="14" fill="none">
-                                        <g stroke="#ffffff" stroke-width="4" stroke-linecap="round">
-                                            <line x1="32" y1="13" x2="32" y2="51"/>
-                                            <line x1="15.5" y1="22.5" x2="48.5" y2="41.5"/>
-                                            <line x1="15.5" y1="41.5" x2="48.5" y2="22.5"/>
-                                        </g>
-                                        <circle cx="32" cy="32" r="5" fill="#ffffff"/>
-                                    </svg>
-                                </span>
-                                Logo Browser (Favicon) Walk-in Frozen
+                                <i class="fas fa-qrcode" style="color:var(--primary); font-size:1.1rem;"></i>
+                                Barcode & QR Code Akses Web Walk-in
                             </h4>
-                            <span style="font-size:0.75rem; background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:100px; font-weight:600;">
-                                <i class="fas fa-check-circle"></i> Aktif di GitHub Pages & Vercel
+                            <span style="font-size:0.75rem; background:var(--primary-light); color:var(--primary); padding:3px 10px; border-radius:100px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+                                <i class="fas fa-shield-alt"></i> Khusus Admin
                             </span>
                         </div>
-                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px; line-height:1.5;">
-                            Logo balok es & kristal salju telah aktif di tab browser. Berlaku untuk <strong>GitHub Pages</strong> maupun <strong>Vercel</strong> (<code>walkin-web-v2.vercel.app</code>) setelah di-push ke repositori.
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:14px; line-height:1.5;">
+                            Pindai QR Code di bawah untuk membuka aplikasi web Walk-in secara cepat di smartphone/tablet staf gudang. Dilengkapi logo favicon Walk-in (kristal salju) di bagian tengah dan terhubung langsung ke URL resmi <code>https://walkin-web-v2.vercel.app/</code>.
                         </p>
+                        
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:14px;">
+                            <div id="walkinQrContainer" style="background:#ffffff; padding:12px; border-radius:16px; box-shadow:0 10px 25px -5px rgba(15,23,42,0.12); border:1px solid #e2e8f0; display:inline-flex; align-items:center; justify-content:center; min-height:260px; min-width:260px;">
+                                <div id="walkinQrLoading" style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:240px; height:240px; color:var(--text-muted); font-size:0.85rem; gap:10px;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size:1.6rem; color:var(--primary);"></i>
+                                    <span>Menyiapkan QR Code...</span>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top:14px; text-align:center;">
+                                <div style="display:inline-flex; align-items:center; gap:6px; background:var(--bg-secondary); border:1px solid var(--border); padding:6px 14px; border-radius:100px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+                                    <i class="fas fa-link" style="color:var(--primary); font-size:0.8rem;"></i>
+                                    <a href="https://walkin-web-v2.vercel.app/" target="_blank" rel="noopener noreferrer" style="font-size:0.8rem; font-family:monospace; font-weight:600; color:var(--primary); text-decoration:none;">
+                                        https://walkin-web-v2.vercel.app/
+                                    </a>
+                                </div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+                                    Koreksi Error: High (H 30%) • Siap Pindai Kamera & Siap Cetak
+                                </div>
+                            </div>
+                        </div>
+
                         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                            <button class="btn btn-sm btn-primary" style="font-size:0.8rem;" onclick="App.copyFaviconSnippet()">
-                                <i class="fas fa-copy"></i> Salin Tag Favicon (GitHub Pages)
+                            <button type="button" class="btn btn-sm btn-primary" style="flex:1; min-width:160px; font-size:0.825rem; padding:10px 14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#0284c7; border-color:#0284c7;" onclick="App.downloadWebQRCode()">
+                                <i class="fas fa-download"></i> Unduh Gambar (PNG)
                             </button>
-                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.showFaviconGuideModal()">
-                                <i class="fas fa-book-open"></i> Panduan Lengkap
+                            <button type="button" class="btn btn-sm btn-outline" style="flex:1; min-width:150px; font-size:0.825rem; padding:10px 14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--bg-secondary);" onclick="App.shareWebQRCode()">
+                                <i class="fas fa-share-alt" style="color:var(--primary);"></i> Bagikan (Share)
                             </button>
-                            <button class="btn btn-sm btn-outline" style="font-size:0.8rem;" onclick="App.downloadFaviconSvg()">
-                                <i class="fas fa-download"></i> Unduh favicon.svg
+                            <button type="button" class="btn btn-sm btn-outline" style="font-size:0.825rem; padding:10px 14px; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--bg-secondary);" onclick="App.copyWebLink()">
+                                <i class="fas fa-copy"></i> Salin Link
                             </button>
                         </div>
                     </div>
@@ -4555,6 +4761,7 @@ function saveEstDate(basketNum, itemIdx) {
             </div>`;
             
             DOM.container.innerHTML = html;
+            setTimeout(generateWebQRCode, 50);
         }
         
         function clearSlot(section, baris, slotIdx) {
@@ -4932,7 +5139,8 @@ function saveEstDate(basketNum, itemIdx) {
             downloadDatabaseJSON, migrateDatabase, resetAllData, searchByStatus,
             restoreDatabaseJSON,
             showUnauthorizedDomainModal, closeUnauthorizedDomainModal, copyDomainToClipboard,
-            showFaviconGuideModal, closeFaviconGuideModal, copyFaviconSnippet, downloadFaviconSvg
+            showFaviconGuideModal, closeFaviconGuideModal, copyFaviconSnippet, downloadFaviconSvg,
+            generateWebQRCode, downloadWebQRCode, shareWebQRCode, copyWebLink
         };
     })();
     

@@ -1,6 +1,6 @@
 {
-  "summary": "Rencana penyesuaian posisi tombol bulat AI chat dan jendela chat agar turun ke sudut kanan bawah (jarak 20px) serta memastikan jendela chat tidak terpotong di bagian atas atau bawah.",
-  "updatedAt": "2026-10-13T06:13:43.051439937Z",
+  "summary": "Fitur Barcode & QR Code akses web Walk-in (https://walkin-web-v2.vercel.app/) dengan logo favicon di tengah telah selesai diterapkan pada tab Pengaturan khusus akun admin, lengkap dengan fitur unduh gambar PNG, tombol bagikan (Web Share API), dan salin tautan.",
+  "updatedAt": "2026-10-15T02:41:00.371881800Z",
   "requestFeedback": true,
   "userFacing": true
 }
